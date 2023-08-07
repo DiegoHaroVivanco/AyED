@@ -1,0 +1,75 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Arista;
+import tp06.Grafo;
+import tp06.Vertice;
+
+public class Parcial {
+
+	
+	
+	
+	public ListaGenerica<String> resolver(Grafo<String> ciudades, String origen, String destino, int rutaObligatoria){
+		ListaGenerica<String> camino = new ListaEnlazadaGenerica<String>();
+		Vertice<String> v;
+		
+		// busco origen
+		v = buscarOrigen(ciudades, origen);
+		if(v != null) {
+			Boolean hayCamino = false;
+			Boolean pasoPorRuta = false;
+			boolean[] marca = new boolean[ciudades.listaDeVertices().tamanio()+1];
+			dfs(v.getPosicion(), camino, marca, ciudades, destino, rutaObligatoria,hayCamino, pasoPorRuta);
+		}else {
+			return camino;
+		}
+		return camino;	
+	}
+	
+	
+	private Boolean dfs(int pos, ListaGenerica<String> l, boolean[]marca, Grafo<String> g, String destino, int ruta,Boolean hayCamino,Boolean pasoPorRuta ) {
+		marca[pos] = true;
+		Vertice<String> v = g.vetice(pos);
+		l.agregarFinal(v.dato());
+		if(v.dato().equals(destino)) {
+			if(pasoPorRuta) {
+				hayCamino = true;
+			}
+		}else {
+			ListaGenerica<Arista<String>> ady = g.listaDeAdyacentes(v);
+			ady.comenzar();
+			while(!ady.fin() && !hayCamino) {
+				Arista<String> a = ady.proximo();
+				int i = a.verticeDestino().getPosicion();
+				if(!marca[i]) {
+					if(a.peso() == ruta) {
+						pasoPorRuta = true; 
+						hayCamino = dfs(i, l, marca, g, destino, ruta);
+					}else {
+						hayCamino = dfs(i, l, marca, g, destino, ruta);
+					}
+				}
+			}
+			if(!hayCamino) {
+				l.eliminarEn(l.tamanio());
+			}
+		}
+		return hayCamino;
+	}
+	
+	private Vertice<String> buscarOrigen(Grafo<String> g, String origen) {
+		ListaGenerica<Vertice<String>> v =  g.listaDeVertices();
+		Vertice<String> vAux = null;
+		v.comenzar();
+		while(!v.fin()) {
+			vAux = v.proximo();
+			if(vAux.dato().equals(origen)) {
+				return vAux;
+			}
+		}
+		return vAux;
+	}
+	
+}

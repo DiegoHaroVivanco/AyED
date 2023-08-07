@@ -1,0 +1,116 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Arista;
+import tp06.Grafo;
+import tp06.GrafoImplListAdy;
+import tp06.Vertice;
+import tp06.VerticeImplListAdy;
+
+public class ParcialLpMdq {
+	
+	public ListaGenerica<ListaGenerica<String>> resolver(Grafo<String> ciudades, String origen, String destino){
+		ListaGenerica<ListaGenerica<String>> caminos = new ListaEnlazadaGenerica<>();
+		ListaGenerica<String> caminosAux = new ListaEnlazadaGenerica<>();
+		
+		boolean [] marcas = new boolean[ciudades.listaDeVertices().tamanio()+1];
+		Vertice<String> v = buscarOrigen(ciudades, origen);
+		
+		if(v != null) {
+			resolver(ciudades, v.getPosicion(),marcas,origen, destino, caminos, caminosAux);
+		}
+		
+		return caminos;
+	}
+
+	private void resolver(Grafo<String> ciudades, int posicion, boolean[] marcas, String origen, String destino,
+			ListaGenerica<ListaGenerica<String>> caminos, ListaGenerica<String> caminosAux) {
+
+		marcas[posicion] = true;
+		Vertice<String> v = ciudades.vetice(posicion);
+		caminosAux.agregarFinal(v.dato());
+		
+		if(v.dato().equals(destino)) {
+			caminos.agregarFinal(caminosAux.clonar());
+		}else {
+			ListaGenerica<Arista<String>> ady = ciudades.listaDeAdyacentes(v);
+			ady.comenzar();
+			while(!ady.fin()) {
+				Arista<String> arista = ady.proximo();
+				int pos = arista.verticeDestino().getPosicion();
+				if(!marcas[pos]) {
+					this.resolver(ciudades, pos, marcas, origen, destino, caminos, caminosAux);
+				}
+			}
+		}
+		// dejo todo como estaba
+		marcas[posicion] = false;
+		caminosAux.eliminarEn(caminosAux.tamanio());
+	}
+
+	
+	private Vertice<String> buscarOrigen(Grafo<String> ciudades, String origen) {
+		ListaGenerica<Vertice<String>> vertices = ciudades.listaDeVertices();
+		Vertice<String> vAux = null;
+		vertices.comenzar();
+		while(!vertices.fin()) {
+			vAux = vertices.proximo();
+			if(vAux.dato().equals(origen)) {
+				return vAux;
+			}
+		}
+		
+		return vAux;
+	}
+	
+	// Test
+	public static void main(String args[]) {
+			Vertice<String> v1 = new VerticeImplListAdy<String>("Mar del Plata");
+			Vertice<String> v2 = new VerticeImplListAdy<String>("Pila");
+			Vertice<String> v3 = new VerticeImplListAdy<String>("Mar Azul");
+			Vertice<String> v4 = new VerticeImplListAdy<String>("Las Gaviotas");
+			Vertice<String> v5 = new VerticeImplListAdy<String>("Querandi");
+			Vertice<String> v6 = new VerticeImplListAdy<String>("Pinamar");
+			Vertice<String> v7 = new VerticeImplListAdy<String>("Dolores");
+			Vertice<String> v8 = new VerticeImplListAdy<String>("Chascomus");
+			Vertice<String> v9 = new VerticeImplListAdy<String>("La Plata");
+			Vertice<String> v10 = new VerticeImplListAdy<String>("Hubdson");
+			Vertice<String> v11 = new VerticeImplListAdy<String>("Madariaga");
+			Grafo<String> ciudades = new GrafoImplListAdy<String>();
+			
+			ciudades.agregarVertice(v1);
+		    ciudades.agregarVertice(v2);
+			ciudades.agregarVertice(v3);
+			ciudades.agregarVertice(v4);
+			ciudades.agregarVertice(v5);
+			ciudades.agregarVertice(v6);
+			ciudades.agregarVertice(v7);
+			ciudades.agregarVertice(v8);
+			ciudades.agregarVertice(v9);
+			ciudades.agregarVertice(v10);
+			ciudades.agregarVertice(v11);
+			ciudades.conectarBidireccional(v1, v3);
+			ciudades.conectarBidireccional(v1, v2);
+			ciudades.conectarBidireccional(v3, v4);
+			ciudades.conectarBidireccional(v3, v5);
+			ciudades.conectarBidireccional(v3, v6); 
+			ciudades.conectarBidireccional(v2, v7); 
+			ciudades.conectarBidireccional(v7, v11); 
+			ciudades.conectarBidireccional(v6, v11);
+			ciudades.conectarBidireccional(v7, v8); 
+			ciudades.conectarBidireccional(v11, v9);	
+			ciudades.conectarBidireccional(v8, v9); 
+			ciudades.conectarBidireccional(v9, v10);
+			
+			ParcialLpMdq p = new ParcialLpMdq();			
+			ListaGenerica <ListaGenerica<String>> lista = p.resolver(ciudades,"La Plata", "Mar del Plata");
+			
+			lista.comenzar();
+			while(!lista.fin()) {
+				System.out.println("-> "+lista.proximo());
+				
+			}
+	}
+
+}

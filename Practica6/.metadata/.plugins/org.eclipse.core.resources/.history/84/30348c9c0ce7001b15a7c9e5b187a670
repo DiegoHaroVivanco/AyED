@@ -1,0 +1,25 @@
+package Parcial;
+
+public class SumaCamino {
+	private int costoAct;
+	private int costoMin;
+	
+	
+	public int getCostoMin(){
+		return costoMin;
+	}
+	
+	public void setCostoMin(int costoMin) {
+		this.costoMin = costoMin;
+	}
+	
+	public int getCostoAct(){
+		return costoAct;
+	}
+	
+	public void setCostoAct(int costoAct) {
+		this.costoAct = costoAct;
+	}
+	
+	
+}

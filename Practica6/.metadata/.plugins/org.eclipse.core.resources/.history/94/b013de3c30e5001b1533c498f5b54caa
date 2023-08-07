@@ -1,0 +1,13 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+
+public class ParcialLpMdq {
+	
+	public ListaGenerica<ListaGenerica<String>> resolver(){
+		
+	}
+	
+	
+}

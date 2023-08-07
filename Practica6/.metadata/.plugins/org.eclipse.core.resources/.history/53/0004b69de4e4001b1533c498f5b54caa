@@ -1,0 +1,64 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Arista;
+import tp06.Grafo;
+import tp06.Vertice;
+
+public class Parcial2 {
+	
+	public Integer resolver(Grafo<Integer> grafo, Integer entrada, Integer salida, ListaGenerica<Integer> exceptuados){
+		ListaGenerica<Vertice<Integer>> vertices = grafo.listaDeVertices();
+		Vertice<Integer> verticeOrigen = null, verticeDestino = null;
+		boolean[] marca = new boolean[vertices.tamanio() + 1];
+		ListaGenerica<Integer> camino = new ListaEnlazadaGenerica<Integer>();
+		vertices.comenzar();
+		while (!vertices.fin()) {
+			Vertice<Integer> actual= vertices.proximo();
+			if (actual.dato().equals(entrada)) {
+				verticeOrigen=actual;
+			}
+			if (actual.dato().equals(salida)) {
+				verticeDestino=actual;
+			}
+		}
+		if(verticeOrigen!=null && verticeDestino!=null && !exceptuados.incluye(entrada) && !exceptuados.incluye(salida)) {
+			exceptuando(grafo, verticeOrigen,verticeDestino,marca,camino,exceptuados);
+			int res=0, aux=0;
+			camino.comenzar();
+			while (!camino.fin()) {
+				aux=camino.proximo();
+				if (aux % 2 != 0) {
+					res= res+aux;
+				}
+			}
+			return res;
+		}
+		return 0;
+	}
+	private boolean exceptuando(Grafo<Integer> grafo ,Vertice<Integer> verticeOrigen, Vertice<Integer> verticeDestino, boolean[] marca, ListaGenerica<Integer> camino, ListaGenerica<Integer> exceptuados) {
+		marca[verticeOrigen.getPosicion()] = true;
+		camino.agregarFinal(verticeOrigen.dato());
+		if(verticeOrigen==verticeDestino) {
+			return true;
+		}
+		else {
+			ListaGenerica<Arista<Integer>> ady = grafo.listaDeAdyacentes(verticeOrigen); 
+			ady.comenzar();
+			while (!ady.fin()) {
+				Arista<Integer> arista= ady.proximo();
+				Vertice<Integer> siguiente = arista.verticeDestino();
+				if (!marca[siguiente.getPosicion()] && !exceptuados.incluye(siguiente.dato())) { //sin pasar por los nros exceptuados
+					boolean resultado = this.exceptuando(grafo,siguiente, verticeDestino, marca, camino, exceptuados);
+                    if (resultado) {
+                            return true;
+                    }
+				}
+			}
+		camino.eliminarEn(camino.tamanio());
+		return false;
+		}
+	}
+}
+//El ejercicio esta aprobado con calificacion 6 (SEIS) de 6

@@ -1,0 +1,124 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Arista;
+import tp06.Grafo;
+import tp06.GrafoImplListAdy;
+import tp06.Vertice;
+import tp06.VerticeImplListAdy;
+
+public class Parcial {
+	
+	public ListaGenerica<String> resolver(Grafo<String> ciudades, String origen, String destino, int rutaObligatoria){
+		ListaGenerica<String> camino = new ListaEnlazadaGenerica<String>();
+		Vertice<String> v = null;
+		
+		// busco origen
+		v = buscarOrigen(ciudades, origen);
+		if(v != null) {
+			Boolean pasoPorRuta = false;
+			ListaGenerica<String> caminoMin = new ListaEnlazadaGenerica<String>();
+			boolean[] marca = new boolean[ciudades.listaDeVertices().tamanio()+1];
+			dfs(v.getPosicion(), camino,caminoMin, marca, ciudades, destino, rutaObligatoria, pasoPorRuta);
+		}
+		return camino;	
+	}
+		
+	private void dfs(int pos, ListaGenerica<String> l, ListaGenerica<String> lAux,boolean[]marca, Grafo<String> g, String destino, int ruta, Boolean pasoPorRuta) {
+		
+		marca[pos] = true;
+		Vertice<String> v = g.vetice(pos);
+		lAux.agregarFinal(v.dato());
+		if((v.dato().equals(destino)) && (pasoPorRuta) && (l.tamanio() > lAux.tamanio()) || (l.esVacia())) {
+			// elimino todos los elementos de la lista
+			l.comenzar();
+			while(!l.fin()) {
+				l.eliminar(l.proximo());
+			}
+			// iterar en la lista auxiliar y agregar cada elemento a la lista "l"
+			lAux.comenzar();
+			while(!lAux.fin()) {
+				l.agregarFinal(lAux.proximo());
+			}
+		}else {
+			ListaGenerica<Arista<String>> ady = g.listaDeAdyacentes(v);
+			ady.comenzar();
+			while(!ady.fin()) {
+				Arista<String> a = ady.proximo();
+				int i = a.verticeDestino().getPosicion();
+				if(!marca[i]) {
+					if(a.peso() == ruta) {
+						pasoPorRuta = true; 
+						dfs(i, l, lAux, marca, g, destino, ruta, pasoPorRuta);
+					}
+				}
+			}
+			
+		}
+		// dejo todo como estaba
+		marca[pos] = false;
+		lAux.eliminarEn(lAux.tamanio());
+		
+	}
+	
+	private Vertice<String> buscarOrigen(Grafo<String> g, String origen) {
+		ListaGenerica<Vertice<String>> v =  g.listaDeVertices();
+		Vertice<String> vAux = null;
+		v.comenzar();
+		while(!v.fin()) {
+			vAux = v.proximo();
+			if(vAux.dato().equals(origen)) {
+				return vAux;
+			}
+		}
+		return vAux;
+	}
+	
+	// Test
+		public static void main(String args[]) {
+				Vertice<String> v1 = new VerticeImplListAdy<String>("Coruña");
+				Vertice<String> v2 = new VerticeImplListAdy<String>("Vigo");
+				Vertice<String> v3 = new VerticeImplListAdy<String>("Oviedo");
+				Vertice<String> v4 = new VerticeImplListAdy<String>("Bilbao");
+				Vertice<String> v5 = new VerticeImplListAdy<String>("Badajoz");
+				Vertice<String> v6 = new VerticeImplListAdy<String>("Madrid");
+				Vertice<String> v7 = new VerticeImplListAdy<String>("Barcelona");
+				Vertice<String> v8 = new VerticeImplListAdy<String>("Zaragoza");
+				Vertice<String> v9 = new VerticeImplListAdy<String>("Granada");
+	
+				Grafo<String> ciudades = new GrafoImplListAdy<String>();
+				
+				ciudades.agregarVertice(v1);
+			    ciudades.agregarVertice(v2);
+				ciudades.agregarVertice(v3);
+				ciudades.agregarVertice(v4);
+				ciudades.agregarVertice(v5);
+				ciudades.agregarVertice(v6);
+				ciudades.agregarVertice(v7);
+				ciudades.agregarVertice(v8);
+				ciudades.agregarVertice(v9);
+				ciudades.conectarBidireccional(v1, v2, 171);
+				ciudades.conectarBidireccional(v1, v3, 304);
+				ciudades.conectarBidireccional(v2, v4, 255);
+				ciudades.conectarBidireccional(v3, v4, 280);
+				ciudades.conectarBidireccional(v3, v6, 311); 
+				ciudades.conectarBidireccional(v4, v5, 251); 
+				ciudades.conectarBidireccional(v4, v6, 193); 
+				ciudades.conectarBidireccional(v5, v9, 350);
+				ciudades.conectarBidireccional(v6, v7, 402); 
+				ciudades.conectarBidireccional(v6, v8, 302);	
+				ciudades.conectarBidireccional(v6, v9, 321); 
+				
+				Parcial p = new Parcial();			
+				ListaGenerica<String> lista = p.resolver(ciudades,"dada", "Ovedo", 193);
+				
+				lista.comenzar();
+				while(!lista.fin()) {
+					System.out.println("-> "+lista.proximo());
+					
+				}
+		}
+
+	
+}

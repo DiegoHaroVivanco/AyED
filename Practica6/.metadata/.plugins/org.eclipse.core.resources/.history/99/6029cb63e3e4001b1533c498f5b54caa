@@ -1,0 +1,101 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Arista;
+import tp06.Grafo;
+import tp06.GrafoImplListAdy;
+import tp06.Vertice;
+import tp06.VerticeImplListAdy;
+
+public class Parcial1{
+		public ListaGenerica <ListaGenerica<String>> resolver (Grafo<String> ciudades, String origen, 
+		String destino){
+		int i=1;
+		boolean [] marca = new boolean [ciudades.listaDeVertices().tamanio()+1];
+		ListaGenerica<String> recorridoMin = new ListaEnlazadaGenerica<String>();
+		ListaGenerica<ListaGenerica<String>> recorrido = new ListaEnlazadaGenerica<ListaGenerica<String>>();
+		ListaGenerica<Vertice<String>> lVertices = ciudades.listaDeVertices();
+		lVertices.comenzar();
+		String dato=lVertices.proximo().dato();
+		while((!lVertices.fin()) && (dato!=origen) ) {
+			dato=lVertices.proximo().dato();
+			i++;
+		}
+		if(dato==origen) {
+			resolver(destino,i,marca,recorridoMin,ciudades,recorrido);
+		}
+		return recorrido;
+	}
+	
+		private void resolver(String destino,int i,boolean [] marca,ListaGenerica<String> recorridoMin,
+		Grafo<String> ciudades,ListaGenerica <ListaGenerica<String>> recorrido) {
+		marca[i]=true;
+		Vertice<String> v = ciudades.listaDeVertices().elemento(i);
+		recorridoMin.agregarEn(v.dato(),recorridoMin.tamanio()+1);
+		if(v.dato()==destino) {
+				recorrido.agregarEn(recorridoMin.clonar(),recorrido.tamanio()+1);
+		}else {
+			ListaGenerica<Arista<String>> ady = ciudades.listaDeAdyacentes(v);
+			ady.comenzar();
+			while(!ady.fin()) {
+				Arista<String> ar=ady.proximo();
+				Vertice<String> verticeDestino = ar.verticeDestino();
+				if(!marca[verticeDestino.getPosicion()]) {
+					resolver(destino,verticeDestino.getPosicion(),marca,recorridoMin,ciudades,recorrido);
+					recorridoMin.eliminar(verticeDestino.dato());
+					
+				}
+			}
+		}
+		marca[v.getPosicion()]=false;
+	}
+		
+		public static void main(String [] args) {
+			Vertice<String> v1 = new VerticeImplListAdy<String>("Mar del Plata");
+			Vertice<String> v2 = new VerticeImplListAdy<String>("Pila");
+			Vertice<String> v3 = new VerticeImplListAdy<String>("Mar Azul");
+			Vertice<String> v4 = new VerticeImplListAdy<String>("Las Gaviotas");
+			Vertice<String> v5 = new VerticeImplListAdy<String>("Querandi");
+			Vertice<String> v6 = new VerticeImplListAdy<String>("Pinamar");
+			Vertice<String> v7 = new VerticeImplListAdy<String>("Dolores");
+			Vertice<String> v8 = new VerticeImplListAdy<String>("Chascomus");
+			Vertice<String> v9 = new VerticeImplListAdy<String>("La Plata");
+			Vertice<String> v10 = new VerticeImplListAdy<String>("Hubdson");
+			Vertice<String> v11 = new VerticeImplListAdy<String>("Madariaga");
+			Grafo<String> ciudades = new GrafoImplListAdy<String>();
+			
+			ciudades.agregarVertice(v1);
+		    ciudades.agregarVertice(v2);
+			ciudades.agregarVertice(v3);
+			ciudades.agregarVertice(v4);
+			ciudades.agregarVertice(v5);
+			ciudades.agregarVertice(v6);
+			ciudades.agregarVertice(v7);
+			ciudades.agregarVertice(v8);
+			ciudades.agregarVertice(v9);
+			ciudades.agregarVertice(v10);
+			ciudades.agregarVertice(v11);
+			ciudades.conectar(v1, v3);
+			ciudades.conectar(v1, v2);
+			ciudades.conectar(v3, v4);
+			ciudades.conectar(v3, v5);
+			ciudades.conectar(v3, v6); 
+			ciudades.conectar(v2, v7); 
+			ciudades.conectar(v7, v11); 
+			ciudades.conectar(v6, v11);
+			ciudades.conectar(v7, v8); 
+			ciudades.conectar(v11, v9);	
+			ciudades.conectar(v8, v9); 
+			ciudades.conectar(v9, v10);
+			
+			Parcial p = new Parcial();
+			
+			//ListaGenerica <ListaGenerica<String>> lista = p.resolver(ciudades,"La Plata", "Mar del Plata");
+			
+			//System.out.println(p.resolver(ciudades,"La Plata", "Mar del Plata"));
+			System.out.println("hola");
+		}
+		
+		
+}

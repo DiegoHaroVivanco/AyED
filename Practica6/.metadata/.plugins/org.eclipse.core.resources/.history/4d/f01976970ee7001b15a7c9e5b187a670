@@ -1,0 +1,25 @@
+package Parcial;
+
+public class SumaCamino {
+	private int costoAct;
+	private int costoMax;
+	
+	
+	public int getCostoMax(){
+		return costoMax;
+	}
+	
+	public void setCostoMax(int costoMax) {
+		this.costoMax = costoMax;
+	}
+	
+	public int getCostoAct(){
+		return costoAct;
+	}
+	
+	public void setCostoAct(int costoAct) {
+		this.costoAct = costoAct;
+	}
+	
+	
+}

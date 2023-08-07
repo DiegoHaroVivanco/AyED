@@ -1,0 +1,20 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Grafo;
+
+public class ParcialLpMdq {
+	
+	public ListaGenerica<ListaGenerica<String>> resolver(Grafo<String> ciudades, String origen, String dentino){
+		ListaGenerica<ListaGenerica<String>> caminos = new ListaEnlazadaGenerica<>();
+		boolean [] marcas = new boolean[ciudades.listaDeVertices().tamanio()+1];
+		
+		
+		
+		return caminos;
+	}
+	
+	
+
+}

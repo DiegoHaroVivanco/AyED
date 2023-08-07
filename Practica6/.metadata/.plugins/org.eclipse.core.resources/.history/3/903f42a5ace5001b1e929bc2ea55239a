@@ -1,0 +1,67 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Arista;
+import tp06.Grafo;
+import tp06.Vertice;
+
+public class ParcialLpMdq {
+	
+	public ListaGenerica<ListaGenerica<String>> resolver(Grafo<String> ciudades, String origen, String destino){
+		ListaGenerica<ListaGenerica<String>> caminos = new ListaEnlazadaGenerica<>();
+		ListaGenerica<String> caminosAux = new ListaEnlazadaGenerica<>();
+		
+		boolean [] marcas = new boolean[ciudades.listaDeVertices().tamanio()+1];
+		Vertice<String> v = buscarOrigen(ciudades, origen);
+		
+		if(v != null) {
+			resolver(ciudades, v.getPosicion(),marcas,origen, destino, caminos, caminosAux);
+		}
+		
+		return caminos;
+	}
+
+	private void resolver(Grafo<String> ciudades, int posicion, boolean[] marcas, String origen, String destino,
+			ListaGenerica<ListaGenerica<String>> caminos, ListaGenerica<String> caminosAux) {
+
+		marcas[posicion] = true;
+		Vertice<String> v = ciudades.vetice(posicion);
+		caminosAux.agregarFinal(v.dato());
+		
+		if(v.dato().equals(destino)) {
+			caminos.agregarFinal(caminosAux.clonar());
+		}else {
+			ListaGenerica<Arista<String>> ady = ciudades.listaDeAdyacentes(v);
+			ady.comenzar();
+			while(!ady.fin()) {
+				Arista<String> arista = ady.proximo();
+				int pos = arista.verticeDestino().getPosicion();
+				if(!marcas[pos]) {
+					this.resolver(ciudades, pos, marcas, origen, destino, caminos, caminosAux);
+				}
+			}
+		}
+		// dejo todo como estaba
+		marcas[posicion] = false;
+		caminosAux.eliminarEn(caminosAux.tamanio());
+	}
+
+	
+	private Vertice<String> buscarOrigen(Grafo<String> ciudades, String origen) {
+		ListaGenerica<Vertice<String>> vertices = ciudades.listaDeVertices();
+		Vertice<String> vAux = null;
+		vertices.comenzar();
+		while(!vertices.fin()) {
+			vAux = vertices.proximo();
+			if(vAux.dato().equals(origen)) {
+				return vAux;
+			}
+		}
+		
+		return vAux;
+	}
+	
+	
+
+}

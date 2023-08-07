@@ -1,0 +1,77 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import ejercicio4.Recorridos;
+import tp06.Grafo;
+import tp06.GrafoImplListAdy;
+import tp06.Vertice;
+import tp06.VerticeImplListAdy;
+
+public class Test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+				Grafo<String> grafo = new GrafoImplListAdy<>();
+				Vertice<String> [] ArVer= new Vertice [20];
+				for (int i = 0; i < 20; i++) {
+					ArVer[i]= new VerticeImplListAdy<>("V"+i);
+					grafo.agregarVertice(ArVer[i]);
+				}
+				//--------------------V0--------------------//
+				grafo.conectarBidireccional(ArVer[0], ArVer[1],1);//V0 - V1
+				//--------------------V1--------------------//
+				grafo.conectarBidireccional(ArVer[1], ArVer[2],2);//V1 - V2
+				grafo.conectarBidireccional(ArVer[1], ArVer[4],3);//V1 - V4
+				//--------------------V2--------------------//
+				grafo.conectarBidireccional(ArVer[2], ArVer[3],4);//V2 - V3
+				//--------------------V3--------------------//
+				grafo.conectarBidireccional(ArVer[3], ArVer[4],5);//V3 - V4
+				//--------------------V4--------------------//
+				grafo.conectarBidireccional(ArVer[4], ArVer[5],6);//V4 - V5
+				grafo.conectarBidireccional(ArVer[4], ArVer[9],7);//V4 - V9
+				//--------------------V5--------------------//
+				grafo.conectarBidireccional(ArVer[5], ArVer[2],8);//V5 - V2
+				grafo.conectarBidireccional(ArVer[5], ArVer[6],9);//V5 - V6
+				//--------------------V6--------------------//
+				grafo.conectarBidireccional(ArVer[6], ArVer[0],10);//V6 - V0
+				grafo.conectarBidireccional(ArVer[6], ArVer[8],11);//V6 - V8
+				grafo.conectarBidireccional(ArVer[6], ArVer[13],12);//V6 - V13
+				grafo.conectarBidireccional(ArVer[6], ArVer[14],13);//V6 - V14
+				//--------------------V7--------------------//
+				grafo.conectarBidireccional(ArVer[7], ArVer[17],14);//V7 - V17
+				//--------------------V8--------------------//
+				//--------------------V9--------------------//
+				grafo.conectarBidireccional(ArVer[9], ArVer[10],15);//V9 - V10
+				//--------------------V10--------------------//
+				grafo.conectarBidireccional(ArVer[10], ArVer[12],16);//V10 - V12
+				//--------------------V11--------------------//
+				grafo.conectarBidireccional(ArVer[11], ArVer[10],17);//V11 - V10
+				//--------------------V12--------------------//
+				grafo.conectarBidireccional(ArVer[12], ArVer[12],18);//V12 - V12
+				//--------------------V13--------------------//
+				grafo.conectarBidireccional(ArVer[13], ArVer[8],19);//V13 - V8
+				//--------------------V14--------------------//
+				grafo.conectarBidireccional(ArVer[14], ArVer[13],20);//V14 - V13
+				//--------------------V15--------------------//
+				grafo.conectarBidireccional(ArVer[15], ArVer[7],21);//V15 - V7
+				//--------------------V16--------------------//
+				grafo.conectarBidireccional(ArVer[16], ArVer[18],22);//V16 - V18
+				//--------------------V17--------------------//
+				grafo.conectarBidireccional(ArVer[17], ArVer[16],23);//V17 - V16
+				//--------------------V18--------------------//
+				grafo.conectarBidireccional(ArVer[18], ArVer[17],24);//V18 - V17
+				//--------------------V19--------------------//
+				//--------------------Fin--------------------//
+				
+				Recorridos<String> reco = new Recorridos<>();
+				//System.out.println(reco.bfs(grafo));
+				Parcial p = new Parcial();
+				ListaGenerica<String> lista = p.resolver(grafo, "V18", "V17", 1);
+				lista.comenzar();
+				while(!lista.fin()) {
+					System.out.println("->"+lista.proximo());
+				}
+			}
+	
+	}

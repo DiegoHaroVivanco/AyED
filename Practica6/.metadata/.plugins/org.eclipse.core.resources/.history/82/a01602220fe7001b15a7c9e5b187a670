@@ -1,0 +1,39 @@
+package Parcial;
+
+public class SumaCamino {
+	private int costoAct;
+	private int costoMax;
+	private ListaGenerica<String> caminoMax = new ListaEnlazadaGenerica<T>();
+	
+	
+	public ListaGenerica<String> getCaminoMax() {
+		return caminoMax;
+	}
+	
+	public void setCaminoMax(ListaGenerica<String> caminoMax) {
+		this.caminoMax = caminoMax.clonar();
+	}
+	
+	
+	public int getCostoMax(){
+		return costoMax;
+	}
+	
+	public void setCostoMax(int costoMax) {
+		this.costoMax = costoMax;
+	}
+	
+	public int getCostoAct(){
+		return costoAct;
+	}
+	
+	public void setCostoAct(int costoAct) {
+		this.costoAct = costoAct;
+	}
+	
+	
+	public void actualizarValor(int costoMax, ListaGenerica<String> caminoMax) {
+		this.costoMax = costoMax;
+		this.caminoMax = caminoMax.clonar();
+	}
+}

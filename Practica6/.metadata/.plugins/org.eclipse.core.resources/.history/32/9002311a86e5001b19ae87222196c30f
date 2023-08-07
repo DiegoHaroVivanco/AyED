@@ -1,0 +1,19 @@
+package Parcial;
+
+import ListasGenericas.ListaEnlazadaGenerica;
+import ListasGenericas.ListaGenerica;
+import tp06.Grafo;
+
+public class ParcialLpMdq {
+	
+	public ListaGenerica<ListaGenerica<String>> resolver(Grafo<String> grafo, String origen, String dentino){
+		ListaGenerica<ListaGenerica<String>> caminos = new ListaEnlazadaGenerica<>();
+		
+		
+		
+		return caminos;
+	}
+	
+	
+
+}

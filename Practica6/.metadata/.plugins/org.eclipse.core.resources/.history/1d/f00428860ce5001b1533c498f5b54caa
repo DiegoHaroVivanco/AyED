@@ -1,0 +1,72 @@
+package ejercicio4;
+import tp06.*;
+
+//import java.util.Iterator;
+
+import ListasGenericas.*;
+import tp03.ColaGenerica;
+
+public class Recorridos<T>{
+	
+	// recorrido en profundidad
+	public ListaGenerica<T>dfs(Grafo<T> grafo){
+		ListaGenerica<T> lista = new ListaEnlazadaGenerica<>();
+		boolean [] marcas = new boolean[grafo.listaDeVertices().tamanio() + 1]; // tamanio() + 1 porque empieza en 0
+		for (int i = 1; i <= grafo.listaDeVertices().tamanio(); i++) {
+			if(!marcas[i]) {
+				this.dfs(i, grafo, marcas, lista);
+			}
+		}
+		return lista;
+	}
+	
+	private void dfs(int indice, Grafo<T> grafo, boolean[] marca, ListaGenerica<T> l) {
+		marca[indice] = true;
+		Vertice<T> v = grafo.listaDeVertices().elemento(indice);
+		l.agregarFinal(v.dato()); // agrego a la lista de vertices
+		ListaGenerica<Arista<T>> ad = grafo.listaDeAdyacentes(v); // pido las adyacencias del vertice
+		ad.comenzar();
+		while(!ad.fin()) {
+			int j = ad.proximo().verticeDestino().getPosicion(); // posicion del proximo vertice
+			if(!marca[j]) { // verifico si está o no está visitado
+				this.dfs(j, grafo, marca, l);
+			}
+		}
+	}
+	
+	// recorrido en amplitud(por niveles)
+	
+	public ListaGenerica<T> bfs(Grafo<T> grafo) {
+		boolean[] marca = new boolean[grafo.listaDeVertices().tamanio() + 1];
+		for (int i = 1; i < marca.length; i++) {
+			marca[i] = false;
+		} // Iniciamos las marcas en false porque no se visito ninguno
+		ListaGenerica<T> listasalida = new ListaEnlazadaGenerica<>();
+		for (int i = 1; i < marca.length; i++) {
+			if (!marca[i])
+				bfs(i, grafo, listasalida, marca); // las listas empiezan en la pos 1
+		}
+		return listasalida;
+	}
+
+	private void bfs(int i, Grafo<T> grafo, ListaGenerica<T> listasalida, boolean[] marca) {
+		ListaGenerica<Arista<T>> ady = null;
+		ColaGenerica<Vertice<T>> g = new ColaGenerica<>();
+		g.encolar(grafo.listaDeVertices().elemento(i));
+		marca[i] = true;
+		while (!g.esVacia()) {
+			Vertice<T> ver = g.desencolar();
+			listasalida.agregarFinal(ver.dato());
+			ady = grafo.listaDeAdyacentes(ver);
+			ady.comenzar();
+			while (!ady.fin()) {
+				Arista<T> ari = ady.proximo();
+				if (!marca[ari.verticeDestino().getPosicion()]) {
+					marca[ari.verticeDestino().getPosicion()] = true;
+					g.encolar(ari.verticeDestino());
+				}
+			}
+		}
+	}
+
+}
